@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>강릉 스노클링 포인트 지도</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#eef3f6}
+.wrap{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:#eef3f6}
+.info-bar{flex:0 0 auto;background:#15294a;color:#fff;text-align:center;font-size:13px;font-weight:700;line-height:1.35;padding:8px 12px;letter-spacing:-.2px;z-index:1000}
+.map-box{flex:1;min-height:0;position:relative;background:#dce8ef}
+#map{width:100%;height:100%}
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;background:rgba(255,255,255,.92);color:#14233a;font-size:13px;font-weight:800;padding:10px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.16)}
+.leaflet-control-attribution{font-size:10px!important}
+.leaflet-div-icon,.leaflet-marker-icon.poi-icon{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
+.poi-marker{position:relative;display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.20))}
+.poi-marker .mk-num,.poi-marker .mk-name,.poi-marker .mk-btn{pointer-events:auto}
+.mk-num{width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 27px;color:#fff;font-size:12.5px;font-weight:800;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);cursor:pointer;user-select:none}
+.mk-name{display:inline-flex;align-items:center;min-height:24px;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.94);border:1.5px solid currentColor;font-size:11.5px;font-weight:800;letter-spacing:-.45px;box-shadow:0 1px 4px rgba(0,0,0,.16);cursor:pointer;user-select:none}
+.mk-btn{display:none;align-items:center;justify-content:center;position:relative;min-height:36px;padding:8px 14px;border:0;border-radius:12px;color:#fff!important;font-size:13px;font-weight:900;letter-spacing:-.2px;box-shadow:0 4px 12px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap;text-decoration:none!important;line-height:1;background:var(--btn-color)}
+.poi-marker.open .mk-btn{display:inline-flex}
+.poi-marker.open .mk-num{background:#d62828!important}
+.poi-marker.left{justify-content:flex-end;transform:translateX(-100%)}
+.poi-marker.left .mk-name{order:1}
+.poi-marker.left .mk-num{order:2}
+.poi-marker.left .mk-btn{order:3;margin-left:8px}
+.poi-marker.right .mk-btn{order:1;margin-right:8px}
+.poi-marker.right .mk-num{order:2}
+.poi-marker.right .mk-name{order:3}
+.poi-marker.right{transform:translateX(0)}
+.poi-marker.left .mk-btn::after,.poi-marker.right .mk-btn::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.poi-marker.left .mk-btn::after{left:-9px;border-right:9px solid var(--btn-color)}
+.poi-marker.right .mk-btn::after{right:-9px;border-left:9px solid var(--btn-color)}
+.mk-btn .arrow{font-size:12px;line-height:1;opacity:.95}
+.leaflet-top.leaflet-left{top:42px}
+@media(max-width:520px){
+  .info-bar{font-size:12.5px;padding:7px 10px}
+  .mk-num{width:25px;height:25px;flex-basis:25px;font-size:12px}
+  .mk-name{font-size:10.8px;padding:3px 6px;min-height:23px;max-width:108px;overflow:hidden;text-overflow:ellipsis}
+  .mk-btn{font-size:12px;min-height:34px;padding:7px 12px;border-radius:11px}
+  .poi-marker.left .mk-btn{margin-left:7px}
+  .poi-marker.right .mk-btn{margin-right:7px}
+  .poi-marker.left .mk-btn::after,.poi-marker.right .mk-btn::after{border-top-width:6px;border-bottom-width:6px}
+  .poi-marker.left .mk-btn::after{left:-8px;border-right-width:8px}
+  .poi-marker.right .mk-btn::after{right:-8px;border-left-width:8px}
+  .leaflet-top.leaflet-left{top:38px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="info-bar">📍 번호나 장소명을 누르면 네이버 지도 버튼이 나와요 · 확대/이동 가능</div>
+  <div class="map-box">
+    <div id="map"></div>
+    <div class="loading" id="loading">지도를 불러오는 중</div>
+  </div>
+</div>
+<script>
+const places = [
+  {num:1, name:'소돌아들바위공원', short:'아들바위공원', lat:37.9149, lng:128.8210, side:'right', color:'#0f4c81', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%EC%95%84%EB%93%A4%EB%B0%94%EC%9C%84%EA%B3%B5%EC%9B%90%20%EA%B0%95%EB%A6%89%20%EC%A3%BC%EB%AC%B8%EB%A6%AC%20791-47'},
+  {num:2, name:'소돌항', short:'소돌항', lat:37.9088, lng:128.8212, side:'left', color:'#8b1e3f', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%ED%95%AD%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C%201958'},
+  {num:3, name:'소돌해변', short:'소돌해변', lat:37.9025, lng:128.8232, side:'right', color:'#1b6b4a', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C%202007'},
+  {num:4, name:'영진해변', short:'영진해변', lat:37.8734, lng:128.8397, side:'right', color:'#6d3b8f', url:'https://map.naver.com/p/search/%EC%98%81%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%97%B0%EA%B3%A1%EB%A9%B4%20%EC%98%81%EC%A7%84%EB%A6%AC%20357-155'},
+  {num:5, name:'순포해변', short:'순포해변', lat:37.8460, lng:128.8770, side:'left', color:'#9a4d00', url:'https://map.naver.com/p/search/%EC%88%9C%ED%8F%AC%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%82%AC%EC%B2%9C%EB%A9%B4%20%ED%95%B4%EC%95%88%EB%A1%9C%20722'},
+  {num:6, name:'사천진해변', short:'사천진해변', lat:37.8356, lng:128.8746, side:'right', color:'#005f73', url:'https://map.naver.com/p/search/%EC%82%AC%EC%B2%9C%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%82%AC%EC%B2%9C%EC%A7%84%EB%A6%AC%20266-50'},
+  {num:7, name:'사근진해변', short:'사근진해변', lat:37.8098, lng:128.9066, side:'left', color:'#b42318', url:'https://map.naver.com/p/search/%EC%82%AC%EA%B7%BC%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C604%EB%B2%88%EA%B8%B8%2016'},
+  {num:8, name:'강문해변', short:'강문해변', lat:37.7948, lng:128.9194, side:'right', color:'#304c89', url:'https://map.naver.com/p/search/%EA%B0%95%EB%AC%B8%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%AC%B8%EB%8F%99%20182-1'},
+  {num:9, name:'안목해변', short:'안목해변', lat:37.7728, lng:128.9479, side:'right', color:'#7f5539', url:'https://map.naver.com/p/search/%EC%95%88%EB%AA%A9%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%B0%BD%ED%95%B4%EB%A1%9C14%EB%B2%88%EA%B8%B8%2020-1'},
+  {num:10, name:'심곡항 바다부채길 포인트 1', short:'심곡 포인트1', lat:37.6649, lng:129.0505, side:'right', color:'#0b7285', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20157-24'},
+  {num:11, name:'심곡항 바다부채길 포인트 2', short:'심곡 포인트2', lat:37.6624, lng:129.0510, side:'left', color:'#7b2cbf', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20163'},
+  {num:12, name:'심곡항 바다부채길 포인트 3', short:'심곡 포인트3', lat:37.6607, lng:129.0517, side:'right', color:'#006d77', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20163-1'},
+  {num:13, name:'금진해변', short:'금진해변', lat:37.6378, lng:129.0478, side:'left', color:'#3f4d2f', url:'https://map.naver.com/p/search/%EA%B8%88%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%98%A5%EA%B3%84%EB%A9%B4%20%EA%B8%88%EC%A7%84%EB%A6%AC%20149-3'}
+];
+
+function loadScript(src){
+  return new Promise(function(resolve,reject){
+    var s=document.createElement('script');
+    s.src=src; s.async=true;
+    s.onload=resolve; s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
+function escapeHtml(text){
+  return String(text).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});
+}
+function openNaver(url){
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+function initMap(){
+  document.getElementById('loading').style.display='none';
+  const map = L.map('map', {
+    zoomControl:true,
+    dragging:true,
+    touchZoom:true,
+    scrollWheelZoom:true,
+    doubleClickZoom:true,
+    boxZoom:true,
+    keyboard:true,
+    tap:true
+  });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© OpenStreetMap contributors',
+    maxZoom:19
+  }).addTo(map);
+  const bounds = L.latLngBounds(places.map(p=>[p.lat,p.lng]));
+  map.fitBounds(bounds, {paddingTopLeft:[28,46], paddingBottomRight:[28,28], maxZoom:11});
+  setTimeout(function(){ map.invalidateSize(); map.fitBounds(bounds,{paddingTopLeft:[28,46],paddingBottomRight:[28,28],maxZoom:11}); }, 250);
+
+  let active = null;
+  function closeActive(){
+    if(active){ active.classList.remove('open'); active=null; }
+  }
+  map.on('click', closeActive);
+  map.on('dragstart zoomstart', closeActive);
+
+  places.forEach(function(p){
+    const side = p.side === 'left' ? 'left' : 'right';
+    const html = '<div class="poi-marker '+side+'" data-num="'+p.num+'" style="color:'+p.color+'">'
+      + '<button class="mk-btn" type="button" style="--btn-color:'+p.color+';background:'+p.color+'"><span>네이버 지도</span><span class="arrow">↗</span></button>'
+      + '<span class="mk-num" style="--btn-color:'+p.color+';background:'+p.color+'">'+p.num+'</span>'
+      + '<span class="mk-name">'+escapeHtml(p.short)+'</span>'
+      + '</div>';
+    const icon = L.divIcon({
+      className:'poi-icon',
+      html:html,
+      iconSize:[1,1],
+      iconAnchor:[0,14]
+    });
+    const marker = L.marker([p.lat,p.lng], {icon:icon, keyboard:false, interactive:true});
+
+    function bindMarkerEvents(){
+      const el = marker.getElement();
+      if(!el) return;
+      const box = el.querySelector('.poi-marker');
+      const num = el.querySelector('.mk-num');
+      const name = el.querySelector('.mk-name');
+      const btn = el.querySelector('.mk-btn');
+      if(!box || !num || !name || !btn || box.dataset.bound === '1') return;
+      box.dataset.bound = '1';
+
+      function toggle(e){
+        if(e){
+          L.DomEvent.stopPropagation(e);
+          if(e.cancelable) e.preventDefault();
+        }
+        if(active && active !== box){ active.classList.remove('open'); }
+        box.classList.toggle('open');
+        active = box.classList.contains('open') ? box : null;
+      }
+
+      [num,name].forEach(function(node){
+        node.addEventListener('click', toggle);
+        node.addEventListener('touchend', toggle, {passive:false});
+      });
+
+      function go(e){
+        L.DomEvent.stopPropagation(e);
+        if(e.cancelable) e.preventDefault();
+        openNaver(p.url);
+      }
+      btn.addEventListener('click', go);
+      btn.addEventListener('touchend', go, {passive:false});
+    }
+
+    marker.on('add', bindMarkerEvents);
+    marker.addTo(map);
+    setTimeout(bindMarkerEvents, 0);
+  });
+}
+
+loadScript('https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js')
+  .catch(function(){return loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');})
+  .then(initMap)
+  .catch(function(){
+    const loading=document.getElementById('loading');
+    loading.textContent='지도를 불러오지 못했어요. 새로고침해 주세요.';
+  });
+</script>
+</body>
+</html>
