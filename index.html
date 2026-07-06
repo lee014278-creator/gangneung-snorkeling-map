@@ -9,79 +9,60 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#eef3f6}
 .wrap{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:#eef3f6}
-.info-bar{flex:0 0 auto;background:#15294a;color:#fff;text-align:center;font-size:13px;font-weight:700;line-height:1.35;padding:8px 12px;letter-spacing:-.2px;z-index:1000}
+.info-bar{flex:0 0 auto;background:#15294a;color:#fff;text-align:center;font-size:13px;font-weight:800;line-height:1.35;padding:8px 12px;letter-spacing:-.2px;z-index:1000}
 .map-box{flex:1;min-height:0;position:relative;background:#dce8ef}
 #map{width:100%;height:100%}
-.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;background:rgba(255,255,255,.92);color:#14233a;font-size:13px;font-weight:800;padding:10px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.16)}
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;background:rgba(255,255,255,.94);color:#14233a;font-size:13px;font-weight:900;padding:10px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.16)}
 .leaflet-control-attribution{font-size:10px!important}
 .leaflet-div-icon,.leaflet-marker-icon.poi-icon{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
-.poi-marker{position:relative;display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.20))}
-.poi-marker .mk-num,.poi-marker .mk-name,.poi-marker .mk-btn{pointer-events:auto}
-.mk-num{width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 27px;color:#fff;font-size:12.5px;font-weight:800;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);cursor:pointer;user-select:none}
-.mk-name{display:inline-flex;align-items:center;min-height:24px;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.94);border:1.5px solid currentColor;font-size:13px;font-weight:800;letter-spacing:-.5px;box-shadow:0 1px 4px rgba(0,0,0,.16);cursor:pointer;user-select:none}
-.mk-btn{display:none;align-items:center;justify-content:center;position:relative;gap:5px;min-height:36px;padding:8px 14px;border:0;border-radius:12px;color:#fff!important;font-size:13px;font-weight:900;letter-spacing:-.2px;box-shadow:0 4px 12px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap;text-decoration:none!important;line-height:1}
-.poi-marker.open .mk-btn{display:inline-flex}
-.poi-marker.open .mk-num{background:#d62828!important}
-.poi-marker.left{justify-content:flex-end;transform:translateX(-100%)}
-.poi-marker.left .mk-name{order:1}
-.poi-marker.left .mk-num{order:2}
-.poi-marker.left .mk-btn{order:3;margin-left:8px}
-.poi-marker.right .mk-btn{order:1;margin-right:8px}
-.poi-marker.right .mk-num{order:2}
-.poi-marker.right .mk-name{order:3}
-.poi-marker.right{transform:translateX(0)}
-.poi-marker.left .mk-btn::after,.poi-marker.right .mk-btn::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent}
-.poi-marker.left .mk-btn::after{left:-9px;border-right:9px solid var(--btn-color)}
-.poi-marker.right .mk-btn::after{right:-9px;border-left:9px solid var(--btn-color)}
-.mk-btn .arrow{font-size:12px;line-height:1;opacity:.95}
+
+.poi{position:relative;display:flex;align-items:center;gap:6px;white-space:nowrap!important;word-break:keep-all!important;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.22))}
+.poi .num,.poi .name,.poi .btn{pointer-events:auto}
+.num{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 30px;color:#fff;font-size:14px;font-weight:900;border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.30);cursor:pointer;user-select:none;line-height:1}
+.name{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border-radius:9px;background:rgba(255,255,255,.98);border:2px solid currentColor;font-size:15px;font-weight:900;letter-spacing:-.55px;box-shadow:0 2px 6px rgba(0,0,0,.18);cursor:pointer;user-select:none;white-space:nowrap!important;word-break:keep-all!important;line-height:1!important;writing-mode:horizontal-tb!important}
+.btn{display:none;align-items:center;justify-content:center;position:relative;gap:5px;height:38px;padding:0 15px;border:0;border-radius:13px;color:#fff!important;font-size:13.5px;font-weight:900;letter-spacing:-.2px;box-shadow:0 4px 12px rgba(0,0,0,.30);cursor:pointer;white-space:nowrap!important;text-decoration:none!important;line-height:1}
+.poi.open .btn{display:inline-flex}
+.poi.open .num{background:#d62828!important}
+
+/* 오른쪽 라벨: 버튼-번호-이름 */
+.poi.r{transform:translateX(0)}
+.poi.r .btn{order:1;margin-right:9px}
+.poi.r .num{order:2}
+.poi.r .name{order:3}
+
+/* 왼쪽 라벨: 이름-번호-버튼 */
+.poi.l{justify-content:flex-end;transform:translateX(-100%)}
+.poi.l .name{order:1}
+.poi.l .num{order:2}
+.poi.l .btn{order:3;margin-left:9px}
+
+.poi.l .btn::after,.poi.r .btn::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent}
+.poi.l .btn::after{left:-10px;border-right:10px solid var(--c)}
+.poi.r .btn::after{right:-10px;border-left:10px solid var(--c)}
 .leaflet-top.leaflet-left{top:42px}
+
+/* 폰에서는 장소명이 확실히 가로로 보이도록 더 크게 */
 @media(max-width:520px){
   .info-bar{font-size:12.5px;padding:7px 10px}
-  .mk-num{width:25px;height:25px;flex-basis:25px;font-size:12px}
-  .mk-name{font-size:16px!important;padding:5px 10px!important;min-height:34px!important;max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;width:max-content!important;word-break:keep-all!important;writing-mode:horizontal-tb!important}
-  .mk-btn{font-size:12.6px;min-height:35px;padding:7px 12px;border-radius:11px}
-  .poi-marker.left .mk-btn{margin-left:7px}
-  .poi-marker.right .mk-btn{margin-right:7px}
-  .poi-marker.left .mk-btn::after,.poi-marker.right .mk-btn::after{border-top-width:6px;border-bottom-width:6px}
-  .poi-marker.left .mk-btn::after{left:-8px;border-right-width:8px}
-  .poi-marker.right .mk-btn::after{right:-8px;border-left-width:8px}
-  .leaflet-top.leaflet-left{top:38px}
-}
-
-/* 모바일 장소명 확대 최종 보정 */
-@media(max-width:640px){
-  .poi-marker{gap:7px!important;}
-  .mk-num{width:28px!important;height:28px!important;flex-basis:28px!important;font-size:13.5px!important;font-weight:900!important;}
-  .mk-name{font-size:16px!important;line-height:1.15!important;padding:6px 10px!important;min-height:35px!important;max-width:210px!important;border-width:2px!important;border-radius:9px!important;background:#fff!important;letter-spacing:-.65px!important;}
-  .mk-btn{font-size:13.2px!important;min-height:38px!important;padding:8px 14px!important;border-radius:12px!important;}
-}
-
-/* 모바일 한글 세로 줄바꿈 방지 최종 보정 */
-.mk-name{
-  white-space:nowrap!important;
-  width:max-content!important;
-  max-width:none!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  word-break:keep-all!important;
-  line-break:strict!important;
-  writing-mode:horizontal-tb!important;
-}
-@media(max-width:520px){
-  .mk-name{
-    font-size:16px!important;
-    min-height:34px!important;
-    padding:5px 10px!important;
-    white-space:nowrap!important;
-    width:max-content!important;
+  .num{width:32px!important;height:32px!important;flex-basis:32px!important;font-size:15px!important}
+  .name{
+    height:36px!important;
+    padding:0 12px!important;
+    font-size:17px!important;
+    font-weight:900!important;
     max-width:none!important;
-    overflow:visible!important;
-    text-overflow:clip!important;
+    width:auto!important;
+    min-width:max-content!important;
+    white-space:nowrap!important;
     word-break:keep-all!important;
     writing-mode:horizontal-tb!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    letter-spacing:-.65px!important;
   }
+  .btn{height:38px!important;padding:0 14px!important;font-size:13.2px!important;border-radius:13px!important}
+  .leaflet-top.leaflet-left{top:38px}
 }
-
 </style>
 </head>
 <body>
@@ -94,35 +75,33 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,Blink
 </div>
 <script>
 const places = [
-  {num:1, name:'소돌아들바위공원', short:'아들바위공원', lat:37.9149, lng:128.8210, side:'right', color:'#0f4c81', url:'https://map.naver.com/p/search/강원+강릉시+주문진읍+주문리+791-47'},
-  {num:2, name:'소돌항', short:'소돌항', lat:37.9088, lng:128.8212, side:'left', color:'#8b1e3f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+주문진읍+해안로+1958'},
-  {num:3, name:'소돌해변', short:'소돌해변', lat:37.9025, lng:128.8232, side:'right', color:'#1b6b4a', url:'https://map.naver.com/p/search/강원도+강릉시+주문진읍+해안로+2007'},
-  {num:4, name:'영진해변', short:'영진해변', lat:37.8734, lng:128.8397, side:'right', color:'#6d3b8f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+연곡면+영진리+357-155'},
-  {num:5, name:'순포해변', short:'순포해변', lat:37.8460, lng:128.8770, side:'left', color:'#9a4d00', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+해안로+722'},
-  {num:6, name:'사천진해변', short:'사천진해변', lat:37.8356, lng:128.8746, side:'right', color:'#005f73', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+사천진리+266-50'},
-  {num:7, name:'사근진해변', short:'사근진해변', lat:37.8098, lng:128.9066, side:'left', color:'#b42318', url:'https://map.naver.com/p/search/강원도+강릉시+해안로604번길+16'},
-  {num:8, name:'강문해변', short:'강문해변', lat:37.7948, lng:128.9194, side:'right', color:'#304c89', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강문동+182-1'},
-  {num:9, name:'안목해변', short:'안목해변', lat:37.7728, lng:128.9479, side:'right', color:'#7f5539', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+창해로14번길+20-1'},
-  {num:10, name:'심곡항 바다부채길 포인트 1', short:'심곡 포인트1', lat:37.6649, lng:129.0505, side:'right', color:'#0b7285', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+157-24'},
-  {num:11, name:'심곡항 바다부채길 포인트 2', short:'심곡 포인트2', lat:37.6624, lng:129.0510, side:'left', color:'#7b2cbf', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163'},
-  {num:12, name:'심곡항 바다부채길 포인트 3', short:'심곡 포인트3', lat:37.6607, lng:129.0517, side:'right', color:'#006d77', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163-1'},
-  {num:13, name:'금진해변', short:'금진해변', lat:37.6378, lng:129.0478, side:'left', color:'#3f4d2f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+옥계면+금진리+149-3'}
+  {num:1, name:'소돌아들바위공원', short:'아들바위공원', lat:37.9149, lng:128.8210, side:'r', color:'#0f4c81', url:'https://map.naver.com/p/search/강원+강릉시+주문진읍+주문리+791-47'},
+  {num:2, name:'소돌항', short:'소돌항', lat:37.9088, lng:128.8212, side:'l', color:'#8b1e3f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+주문진읍+해안로+1958'},
+  {num:3, name:'소돌해변', short:'소돌해변', lat:37.9025, lng:128.8232, side:'r', color:'#1b6b4a', url:'https://map.naver.com/p/search/강원도+강릉시+주문진읍+해안로+2007'},
+  {num:4, name:'영진해변', short:'영진해변', lat:37.8734, lng:128.8397, side:'r', color:'#6d3b8f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+연곡면+영진리+357-155'},
+  {num:5, name:'순포해변', short:'순포해변', lat:37.8460, lng:128.8770, side:'l', color:'#9a4d00', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+해안로+722'},
+  {num:6, name:'사천진해변', short:'사천진해변', lat:37.8356, lng:128.8746, side:'r', color:'#005f73', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+사천진리+266-50'},
+  {num:7, name:'사근진해변', short:'사근진해변', lat:37.8098, lng:128.9066, side:'l', color:'#b42318', url:'https://map.naver.com/p/search/강원도+강릉시+해안로604번길+16'},
+  {num:8, name:'강문해변', short:'강문해변', lat:37.7948, lng:128.9194, side:'r', color:'#304c89', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강문동+182-1'},
+  {num:9, name:'안목해변', short:'안목해변', lat:37.7728, lng:128.9479, side:'r', color:'#7f5539', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+창해로14번길+20-1'},
+  {num:10, name:'심곡항 포인트1', short:'심곡 포인트1', lat:37.6649, lng:129.0505, side:'r', color:'#0b7285', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+157-24'},
+  {num:11, name:'심곡항 포인트2', short:'심곡 포인트2', lat:37.6624, lng:129.0510, side:'l', color:'#7b2cbf', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163'},
+  {num:12, name:'심곡항 포인트3', short:'심곡 포인트3', lat:37.6607, lng:129.0517, side:'r', color:'#006d77', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163-1'},
+  {num:13, name:'금진해변', short:'금진해변', lat:37.6378, lng:129.0478, side:'l', color:'#3f4d2f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+옥계면+금진리+149-3'}
 ];
 
 function loadScript(src){
   return new Promise(function(resolve,reject){
-    var s=document.createElement('script');
-    s.src=src; s.async=true;
-    s.onload=resolve; s.onerror=reject;
+    const s=document.createElement('script');
+    s.src=src; s.async=true; s.onload=resolve; s.onerror=reject;
     document.head.appendChild(s);
   });
 }
 function escapeHtml(text){
   return String(text).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});
 }
-function openNaver(url){
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
+function openNaver(url){ window.open(url, '_blank', 'noopener,noreferrer'); }
+
 function initMap(){
   document.getElementById('loading').style.display='none';
   const map = L.map('map', {
@@ -139,9 +118,13 @@ function initMap(){
     attribution:'© OpenStreetMap contributors',
     maxZoom:19
   }).addTo(map);
+
   const bounds = L.latLngBounds(places.map(p=>[p.lat,p.lng]));
-  map.fitBounds(bounds, {paddingTopLeft:[54,58], paddingBottomRight:[54,46], maxZoom:10});
-  setTimeout(function(){ map.invalidateSize(); map.fitBounds(bounds,{paddingTopLeft:[54,58],paddingBottomRight:[54,46],maxZoom:10}); }, 250);
+  map.fitBounds(bounds, {paddingTopLeft:[70,62], paddingBottomRight:[70,52], maxZoom:10});
+  setTimeout(function(){
+    map.invalidateSize();
+    map.fitBounds(bounds, {paddingTopLeft:[70,62], paddingBottomRight:[70,52], maxZoom:10});
+  }, 250);
 
   let active = null;
   function closeActive(){
@@ -151,44 +134,40 @@ function initMap(){
   map.on('dragstart zoomstart', closeActive);
 
   places.forEach(function(p){
-    const side = p.side === 'left' ? 'left' : 'right';
-    const html = '<div class="poi-marker '+side+'" data-num="'+p.num+'" style="color:'+p.color+'">'
-      + '<button class="mk-btn" type="button" style="--btn-color:'+p.color+';background:'+p.color+'"><span>네이버 지도</span><span class="arrow">↗</span></button>'
-      + '<span class="mk-num" style="background:'+p.color+'">'+p.num+'</span>'
-      + '<span class="mk-name">'+escapeHtml(p.short)+'</span>'
+    const html = '<div class="poi '+p.side+'" data-num="'+p.num+'" style="color:'+p.color+'">'
+      + '<button class="btn" type="button" style="--c:'+p.color+';background:'+p.color+'"><span>네이버 지도</span><span>↗</span></button>'
+      + '<span class="num" style="background:'+p.color+'">'+p.num+'</span>'
+      + '<span class="name">'+escapeHtml(p.short)+'</span>'
       + '</div>';
+
     const icon = L.divIcon({
       className:'poi-icon',
       html:html,
       iconSize:[1,1],
-      iconAnchor:[0,14]
+      iconAnchor:[0,15]
     });
     const marker = L.marker([p.lat,p.lng], {icon:icon, keyboard:false, interactive:true});
 
-    function bindMarkerEvents(){
+    function bind(){
       const el = marker.getElement();
       if(!el) return;
-      const box = el.querySelector('.poi-marker');
-      const num = el.querySelector('.mk-num');
-      const name = el.querySelector('.mk-name');
-      const btn = el.querySelector('.mk-btn');
-      if(!box || !num || !name || !btn || box.dataset.bound === '1') return;
-      box.dataset.bound = '1';
+      const box = el.querySelector('.poi');
+      const num = el.querySelector('.num');
+      const name = el.querySelector('.name');
+      const btn = el.querySelector('.btn');
+      if(!box || !num || !name || !btn || box.dataset.bound==='1') return;
+      box.dataset.bound='1';
 
       function toggle(e){
-        if(e){
-          L.DomEvent.stopPropagation(e);
-          if(e.cancelable) e.preventDefault();
-        }
-        if(active && active !== box){ active.classList.remove('open'); }
+        if(e){ L.DomEvent.stopPropagation(e); if(e.cancelable) e.preventDefault(); }
+        if(active && active!==box) active.classList.remove('open');
         box.classList.toggle('open');
         active = box.classList.contains('open') ? box : null;
       }
-
-      [num,name].forEach(function(node){
-        node.addEventListener('click', toggle);
-        node.addEventListener('touchend', toggle, {passive:false});
-      });
+      num.addEventListener('click', toggle);
+      name.addEventListener('click', toggle);
+      num.addEventListener('touchend', toggle, {passive:false});
+      name.addEventListener('touchend', toggle, {passive:false});
 
       function go(e){
         L.DomEvent.stopPropagation(e);
@@ -198,10 +177,9 @@ function initMap(){
       btn.addEventListener('click', go);
       btn.addEventListener('touchend', go, {passive:false});
     }
-
-    marker.on('add', bindMarkerEvents);
+    marker.on('add', bind);
     marker.addTo(map);
-    setTimeout(bindMarkerEvents, 0);
+    setTimeout(bind,0);
   });
 }
 
@@ -209,8 +187,7 @@ loadScript('https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'
   .catch(function(){return loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');})
   .then(initMap)
   .catch(function(){
-    const loading=document.getElementById('loading');
-    loading.textContent='지도를 불러오지 못했어요. 새로고침해 주세요.';
+    document.getElementById('loading').textContent='지도를 불러오지 못했어요. 새로고침해 주세요.';
   });
 </script>
 </body>
