@@ -19,7 +19,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,Blink
 .poi-marker .mk-num,.poi-marker .mk-name,.poi-marker .mk-btn{pointer-events:auto}
 .mk-num{width:27px;height:27px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 27px;color:#fff;font-size:12.5px;font-weight:800;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);cursor:pointer;user-select:none}
 .mk-name{display:inline-flex;align-items:center;min-height:24px;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.94);border:1.5px solid currentColor;font-size:11.5px;font-weight:800;letter-spacing:-.45px;box-shadow:0 1px 4px rgba(0,0,0,.16);cursor:pointer;user-select:none}
-.mk-btn{display:none;align-items:center;justify-content:center;position:relative;min-height:36px;padding:8px 14px;border:0;border-radius:12px;color:#fff!important;font-size:13px;font-weight:900;letter-spacing:-.2px;box-shadow:0 4px 12px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap;text-decoration:none!important;line-height:1;background:var(--btn-color)}
+.mk-btn{display:none;align-items:center;justify-content:center;position:relative;gap:5px;min-height:36px;padding:8px 14px;border:0;border-radius:12px;color:#fff!important;font-size:13px;font-weight:900;letter-spacing:-.2px;box-shadow:0 4px 12px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap;text-decoration:none!important;line-height:1}
 .poi-marker.open .mk-btn{display:inline-flex}
 .poi-marker.open .mk-num{background:#d62828!important}
 .poi-marker.left{justify-content:flex-end;transform:translateX(-100%)}
@@ -59,19 +59,19 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,Blink
 </div>
 <script>
 const places = [
-  {num:1, name:'소돌아들바위공원', short:'아들바위공원', lat:37.9149, lng:128.8210, side:'right', color:'#0f4c81', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%EC%95%84%EB%93%A4%EB%B0%94%EC%9C%84%EA%B3%B5%EC%9B%90%20%EA%B0%95%EB%A6%89%20%EC%A3%BC%EB%AC%B8%EB%A6%AC%20791-47'},
-  {num:2, name:'소돌항', short:'소돌항', lat:37.9088, lng:128.8212, side:'left', color:'#8b1e3f', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%ED%95%AD%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C%201958'},
-  {num:3, name:'소돌해변', short:'소돌해변', lat:37.9025, lng:128.8232, side:'right', color:'#1b6b4a', url:'https://map.naver.com/p/search/%EC%86%8C%EB%8F%8C%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C%202007'},
-  {num:4, name:'영진해변', short:'영진해변', lat:37.8734, lng:128.8397, side:'right', color:'#6d3b8f', url:'https://map.naver.com/p/search/%EC%98%81%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%97%B0%EA%B3%A1%EB%A9%B4%20%EC%98%81%EC%A7%84%EB%A6%AC%20357-155'},
-  {num:5, name:'순포해변', short:'순포해변', lat:37.8460, lng:128.8770, side:'left', color:'#9a4d00', url:'https://map.naver.com/p/search/%EC%88%9C%ED%8F%AC%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%82%AC%EC%B2%9C%EB%A9%B4%20%ED%95%B4%EC%95%88%EB%A1%9C%20722'},
-  {num:6, name:'사천진해변', short:'사천진해변', lat:37.8356, lng:128.8746, side:'right', color:'#005f73', url:'https://map.naver.com/p/search/%EC%82%AC%EC%B2%9C%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%82%AC%EC%B2%9C%EC%A7%84%EB%A6%AC%20266-50'},
-  {num:7, name:'사근진해변', short:'사근진해변', lat:37.8098, lng:128.9066, side:'left', color:'#b42318', url:'https://map.naver.com/p/search/%EC%82%AC%EA%B7%BC%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%ED%95%B4%EC%95%88%EB%A1%9C604%EB%B2%88%EA%B8%B8%2016'},
-  {num:8, name:'강문해변', short:'강문해변', lat:37.7948, lng:128.9194, side:'right', color:'#304c89', url:'https://map.naver.com/p/search/%EA%B0%95%EB%AC%B8%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%AC%B8%EB%8F%99%20182-1'},
-  {num:9, name:'안목해변', short:'안목해변', lat:37.7728, lng:128.9479, side:'right', color:'#7f5539', url:'https://map.naver.com/p/search/%EC%95%88%EB%AA%A9%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%B0%BD%ED%95%B4%EB%A1%9C14%EB%B2%88%EA%B8%B8%2020-1'},
-  {num:10, name:'심곡항 바다부채길 포인트 1', short:'심곡 포인트1', lat:37.6649, lng:129.0505, side:'right', color:'#0b7285', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20157-24'},
-  {num:11, name:'심곡항 바다부채길 포인트 2', short:'심곡 포인트2', lat:37.6624, lng:129.0510, side:'left', color:'#7b2cbf', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20163'},
-  {num:12, name:'심곡항 바다부채길 포인트 3', short:'심곡 포인트3', lat:37.6607, lng:129.0517, side:'right', color:'#006d77', url:'https://map.naver.com/p/search/%EA%B0%95%EB%A6%89%20%EA%B0%95%EB%8F%99%EB%A9%B4%20%EC%8B%AC%EA%B3%A1%EB%A6%AC%20163-1'},
-  {num:13, name:'금진해변', short:'금진해변', lat:37.6378, lng:129.0478, side:'left', color:'#3f4d2f', url:'https://map.naver.com/p/search/%EA%B8%88%EC%A7%84%ED%95%B4%EB%B3%80%20%EA%B0%95%EB%A6%89%20%EC%98%A5%EA%B3%84%EB%A9%B4%20%EA%B8%88%EC%A7%84%EB%A6%AC%20149-3'}
+  {num:1, name:'소돌아들바위공원', short:'아들바위공원', lat:37.9149, lng:128.8210, side:'right', color:'#0f4c81', url:'https://map.naver.com/p/search/강원+강릉시+주문진읍+주문리+791-47'},
+  {num:2, name:'소돌항', short:'소돌항', lat:37.9088, lng:128.8212, side:'left', color:'#8b1e3f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+주문진읍+해안로+1958'},
+  {num:3, name:'소돌해변', short:'소돌해변', lat:37.9025, lng:128.8232, side:'right', color:'#1b6b4a', url:'https://map.naver.com/p/search/강원도+강릉시+주문진읍+해안로+2007'},
+  {num:4, name:'영진해변', short:'영진해변', lat:37.8734, lng:128.8397, side:'right', color:'#6d3b8f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+연곡면+영진리+357-155'},
+  {num:5, name:'순포해변', short:'순포해변', lat:37.8460, lng:128.8770, side:'left', color:'#9a4d00', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+해안로+722'},
+  {num:6, name:'사천진해변', short:'사천진해변', lat:37.8356, lng:128.8746, side:'right', color:'#005f73', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+사천면+사천진리+266-50'},
+  {num:7, name:'사근진해변', short:'사근진해변', lat:37.8098, lng:128.9066, side:'left', color:'#b42318', url:'https://map.naver.com/p/search/강원도+강릉시+해안로604번길+16'},
+  {num:8, name:'강문해변', short:'강문해변', lat:37.7948, lng:128.9194, side:'right', color:'#304c89', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강문동+182-1'},
+  {num:9, name:'안목해변', short:'안목해변', lat:37.7728, lng:128.9479, side:'right', color:'#7f5539', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+창해로14번길+20-1'},
+  {num:10, name:'심곡항 바다부채길 포인트 1', short:'심곡 포인트1', lat:37.6649, lng:129.0505, side:'right', color:'#0b7285', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+157-24'},
+  {num:11, name:'심곡항 바다부채길 포인트 2', short:'심곡 포인트2', lat:37.6624, lng:129.0510, side:'left', color:'#7b2cbf', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163'},
+  {num:12, name:'심곡항 바다부채길 포인트 3', short:'심곡 포인트3', lat:37.6607, lng:129.0517, side:'right', color:'#006d77', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+강동면+심곡리+163-1'},
+  {num:13, name:'금진해변', short:'금진해변', lat:37.6378, lng:129.0478, side:'left', color:'#3f4d2f', url:'https://map.naver.com/p/search/강원특별자치도+강릉시+옥계면+금진리+149-3'}
 ];
 
 function loadScript(src){
@@ -119,7 +119,7 @@ function initMap(){
     const side = p.side === 'left' ? 'left' : 'right';
     const html = '<div class="poi-marker '+side+'" data-num="'+p.num+'" style="color:'+p.color+'">'
       + '<button class="mk-btn" type="button" style="--btn-color:'+p.color+';background:'+p.color+'"><span>네이버 지도</span><span class="arrow">↗</span></button>'
-      + '<span class="mk-num" style="--btn-color:'+p.color+';background:'+p.color+'">'+p.num+'</span>'
+      + '<span class="mk-num" style="background:'+p.color+'">'+p.num+'</span>'
       + '<span class="mk-name">'+escapeHtml(p.short)+'</span>'
       + '</div>';
     const icon = L.divIcon({
